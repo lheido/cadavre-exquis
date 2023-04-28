@@ -67,14 +67,6 @@ const Game: Component<GameProps> = (props: GameProps) => {
     window.addEventListener("scroll", scrollHandler);
   });
 
-  // createEffect(() => {
-  //   if (keyboardVisible()) {
-  //     setTimeout(() => {
-  //       document.documentElement.scrollTo({ top: 0 });
-  //     }, 2000);
-  //   }
-  // });
-
   onCleanup(() => {
     window.visualViewport?.removeEventListener(
       "resize",
@@ -127,9 +119,6 @@ const Game: Component<GameProps> = (props: GameProps) => {
                 "grayscale-0 h-[40vh] w-[40vh]": stepSent(),
                 "grayscale h-0 w-full translate-x-10 opacity-40": !stepSent(),
                 "opacity-5": keyboardVisible(),
-                // "grayscale-0 top-2/3 left-1/2 -translate-x-1/2 -translate-y-1/2":
-                // "grayscale top-32 -left-1/4 translate-x-0 translate-y-0 rotate-[20deg] opacity-20":
-                //   stepSent(),
               }}
             >
               <div
@@ -147,13 +136,7 @@ const Game: Component<GameProps> = (props: GameProps) => {
                 <svg class="absolute w-full h-full top-0 left-0">
                   <use href="#symbol-logo-cake" />
                 </svg>
-                <svg
-                  class="absolute w-full h-full top-0 left-0"
-                  // style={{ "transform-origin": "62% 52%" }}
-                  // classList={{
-                  //   "animate-bounce-slow": stepSent(),
-                  // }}
-                >
+                <svg class="absolute w-full h-full top-0 left-0">
                   <use href="#symbol-logo-cherry" />
                 </svg>
                 <svg
@@ -171,15 +154,11 @@ const Game: Component<GameProps> = (props: GameProps) => {
               class="relative transition-all"
               classList={{
                 "h-full": keyboardVisible(),
-                // "basis-full": keyboardVisible(),
-                // "basis-0": !keyboardVisible(),
               }}
             >
               <div
                 class="flex items-end gap-4 py-4 pr-2 w-full transition-opacity duration-500"
                 classList={{
-                  // "bottom-0": !keyboardVisible(),
-                  // "top-0": keyboardVisible(),
                   "opacity-0": opacity0(),
                   "pl-6": !stepSent(),
                   "pl-2": stepSent(),
