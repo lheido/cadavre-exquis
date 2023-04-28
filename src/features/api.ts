@@ -4,13 +4,13 @@ import { produce } from "solid-js/store";
 import { GameStateReturn } from "./game";
 import { GameState, PeerAPI, PeerDataEvents, Step } from "./types";
 import { User, useUser } from "./user";
-import { removePeerIdPrefix } from "./utils";
+import { buildFinalResult, removePeerIdPrefix } from "./utils";
 
 export const useInitiatorAPI = (gameReturn: GameStateReturn) => {
   const [game, setGame] = gameReturn;
 
   createEffect(() => {
-    if (game.started) {
+    if (game.started && !game.finished) {
       const playersSteps = Object.values(game.data);
       if (game.players.length === playersSteps.length) {
         const stepCompleted = playersSteps.every(
@@ -18,6 +18,21 @@ export const useInitiatorAPI = (gameReturn: GameStateReturn) => {
         );
         if (stepCompleted && game.step + 1 <= game.steps.length - 1) {
           setGame("step", (i) => i + 1);
+        }
+        if (
+          playersSteps.every(
+            (playerSteps) => playerSteps.length === game.steps.length
+          )
+        ) {
+          setGame(
+            produce((s) => {
+              s.finished = true;
+              s.result = buildFinalResult(
+                JSON.parse(JSON.stringify(game.data)),
+                JSON.parse(JSON.stringify(game.steps))
+              );
+            })
+          );
         }
       }
     }
@@ -73,16 +88,13 @@ export const useInitiatorAPI = (gameReturn: GameStateReturn) => {
           );
         }
       },
-      [PeerDataEvents.InitiatorReceivePlayerUpdate]: (
-        co,
-        payload: Step & { player: string }
-      ) => {
+      [PeerDataEvents.InitiatorReceivePlayerUpdate]: (co, payload: Step) => {
         setGame(
           produce((s) => {
             if (s.data[payload.player] === undefined) {
               s.data[payload.player] = [];
             }
-            s.data[payload.player].push({ id: payload.id, data: payload.data });
+            s.data[payload.player].push(JSON.parse(JSON.stringify(payload)));
           })
         );
       },
@@ -96,10 +108,7 @@ export const useInitiatorAPI = (gameReturn: GameStateReturn) => {
           if (s.data[step.player] === undefined) {
             s.data[step.player] = [];
           }
-          s.data[step.player]?.push({
-            id: step.id,
-            data: step.data,
-          });
+          s.data[step.player]?.push(JSON.parse(JSON.stringify(step)));
         })
       );
     },

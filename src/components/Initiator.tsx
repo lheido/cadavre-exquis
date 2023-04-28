@@ -1,5 +1,6 @@
 import { A } from "@solidjs/router";
 import { Component, For, Match, Switch, createEffect } from "solid-js";
+import { produce } from "solid-js/store";
 import { useInitiatorAPI } from "../features/api";
 import { createGame } from "../features/game";
 import { usePeerInitiator } from "../features/peer";
@@ -7,6 +8,8 @@ import { PeerDataEvents } from "../features/types";
 import { useUser } from "../features/user";
 import Game from "./Game";
 import Icon from "./Icon";
+import Aside from "./layout/Aside";
+import Main from "./layout/Main";
 
 const Initiator: Component = () => {
   const gameState = createGame();
@@ -26,7 +29,7 @@ const Initiator: Component = () => {
   return (
     <Switch>
       <Match when={!game.started}>
-        <header class="bg-primary text-primary-content rounded-b-3xl relative pt-32">
+        <Main>
           <A
             href="/"
             class="absolute top-2 left-2 p-2 rounded-full flex justify-center items-center bg-transparent active:bg-neutral transition-colors"
@@ -49,18 +52,29 @@ const Initiator: Component = () => {
               </For>
             </ul>
           </section>
-        </header>
-        <main class="flex justify-center p-16">
+        </Main>
+        <Aside class="flex justify-center p-16">
           <button
-            class="px-8 py-4 text-3xl flex justify-center items-center rounded-full bg-accent text-accent-content select-none disabled:opacity-50"
+            class="px-8 py-4 font-display text-5xl flex justify-center items-center rounded-full bg-accent text-accent-content select-none disabled:opacity-50"
             disabled={game.players.length < 2}
             onClick={() => {
-              setGame("started", true);
+              setGame(
+                produce((s) => {
+                  s.started = true;
+                  s.finished = false;
+                  s.result = {};
+                  s.data = s.players.reduce(
+                    (acc, p) => ({ ...acc, [p.id]: [] }),
+                    {}
+                  );
+                  s.step = 0;
+                })
+              );
             }}
           >
             Jouer !
           </button>
-        </main>
+        </Aside>
       </Match>
       <Match when={game.started}>
         <Game game={gameState} api={api} />

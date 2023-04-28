@@ -17,7 +17,7 @@ export interface PeerAPI {
     payload: T,
     connection: DataConnection
   ) => void;
-  addStep: (step: Step & { player: string }, co?: DataConnection) => void;
+  addStep: (step: Step, co?: DataConnection) => void;
 }
 
 export interface StepDescription {
@@ -28,6 +28,8 @@ export interface StepDescription {
 
 export interface Step {
   id: string;
+  player: string;
+  color: string;
   data: string;
 }
 
@@ -40,6 +42,8 @@ export interface GameState {
   players: Player[];
   data: Record<string, Step[]>;
   steps: StepDescription[];
+  result: Record<string, Step[]>;
   started: boolean;
+  finished: boolean;
   step: number;
 }

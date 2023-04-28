@@ -21,19 +21,25 @@ let initialState = {
       placeholder:
         "Ecris un sujet, faut que ça commence bien !\nSans vouloir te mettre la pression...",
     },
-    { id: "verbe", description: "Verbe", placeholder: "" },
+    {
+      id: "verbe",
+      description: "Verbe",
+      placeholder: "C'est le moment de tout mettre en action !",
+    },
     {
       id: "complement_lieu",
       description: "Complément de lieu",
-      placeholder: "",
+      placeholder: "Et où se passe tout ça ?",
     },
     {
       id: "complement_temps",
       description: "Complément de temps",
-      placeholder: "",
+      placeholder: `P'tite précision sur le "quand" ?`,
     },
   ],
   started: false,
+  finished: false,
+  result: {},
 } satisfies GameState;
 if (initialStateJSON) {
   initialState = JSON.parse(initialStateJSON);

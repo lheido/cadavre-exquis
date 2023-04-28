@@ -2,6 +2,8 @@ import { A } from "@solidjs/router";
 import { Component } from "solid-js";
 import Join from "../components/Join";
 import User from "../components/User";
+import Aside from "../components/layout/Aside";
+import Main from "../components/layout/Main";
 import { useUser } from "../features/user";
 
 const Home: Component = () => {
@@ -9,7 +11,7 @@ const Home: Component = () => {
 
   return (
     <>
-      <header class="bg-primary rounded-b-3xl px-4 pb-4 pt-16 flex flex-col justify-between gap-8 h-[90svh] shadow-xl shadow-neutral relative z-10">
+      <Main class="flex flex-col justify-between gap-8 pt-16">
         <h1 class="text-5xl text-center font-display">Cadavre Exquis</h1>
 
         <div class="w-80 h-80 relative m-auto">
@@ -28,8 +30,8 @@ const Home: Component = () => {
         </div>
 
         <User prefix="Hello" suffix="!" />
-      </header>
-      <main class="p-4 flex flex-col gap-8 items-center sticky bottom-0 z-0">
+      </Main>
+      <Aside class="flex flex-col gap-8 items-center">
         <Join />
         <A
           class="bg-primary py-2 px-8 text-4xl font-display flex items-center rounded-full"
@@ -37,7 +39,7 @@ const Home: Component = () => {
         >
           Créer une partie
         </A>
-      </main>
+      </Aside>
     </>
   );
 };
