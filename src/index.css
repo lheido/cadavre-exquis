@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --doc-height: 100%;
+}
+
+html {
+  @apply overflow-y-auto;
+  height: var(--doc-height);
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+
+  @apply bg-neutral text-neutral-content font-sans;
+}
+
+#root {
+  @apply contents;
+}
+
+input[type="text"] {
+  @apply bg-transparent p-2;
+  @apply placeholder:text-neutral-content placeholder:text-opacity-70;
+  @apply outline-none;
+}
+
+.form-field {
+  @apply relative;
+  @apply after:bg-neutral after:h-px after:absolute after:bottom-0 after:left-0 after:w-full after:bg-opacity-40 after:transition-all;
+  @apply focus-within:after:bg-opacity-100;
+}
+
+[contenteditable]:empty::before {
+  content: attr(placeholder);
+}
