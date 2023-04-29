@@ -17,7 +17,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
 
-  @apply bg-neutral text-neutral-content font-sans;
+  @apply bg-neutral text-neutral-content font-sans text-base;
 }
 
 #root {
@@ -38,4 +38,8 @@ input[type="text"] {
 
 [contenteditable]:empty::before {
   content: attr(placeholder);
+}
+
+[contenteditable] {
+  font-size: 100% !important;
 }

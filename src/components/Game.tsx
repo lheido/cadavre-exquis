@@ -99,7 +99,7 @@ const Game: Component<GameProps> = (props: GameProps) => {
           <section class="relative h-full flex flex-col justify-between overflow-x-hidden">
             <header class="relative">
               <h1
-                class="mt-20 py-4 px-6 text-center font-display transition-all duration-200"
+                class="mt-20 py-4 px-6 text-center font-display transition-all duration-200 supports-ios:text-3xl"
                 classList={{
                   "text-5xl": !keyboardVisible(),
                   "text-3xl": keyboardVisible(),
@@ -124,7 +124,7 @@ const Game: Component<GameProps> = (props: GameProps) => {
               </div>
             </header>
             <div
-              class="self-center relative transition-all"
+              class="self-center relative transition-all supports-ios:opacity-5"
               classList={{
                 "grayscale-0 h-[40vh] w-[40vh]": waitingForOthers(),
                 "grayscale h-0 w-full translate-x-10 opacity-40":
@@ -162,13 +162,13 @@ const Game: Component<GameProps> = (props: GameProps) => {
               </div>
             </div>
             <div
-              class="relative transition-all"
+              class="relative supports-ios:h-full"
               classList={{
                 "h-full": keyboardVisible(),
               }}
             >
               <div
-                class="flex items-end gap-4 py-4 pr-2 w-full transition-opacity duration-500"
+                class="flex items-end gap-4 py-4 pr-2 w-full transition-opacity duration-500 !supports-ios:opacity-100"
                 classList={{
                   "opacity-0": opacity0(),
                   "pl-4": !waitingForOthers(),
@@ -179,7 +179,7 @@ const Game: Component<GameProps> = (props: GameProps) => {
                   when={!waitingForOthers()}
                   fallback={
                     <p class="py-6 text-center w-full">
-                      En attente des autres joureurs
+                      En attente des autres joueurs
                     </p>
                   }
                 >

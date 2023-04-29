@@ -28,6 +28,9 @@ module.exports = {
       animation: {
         "bounce-slow": "bounce 3s linear infinite",
       },
+      supports: {
+        ios: "-webkit-touch-callout: none",
+      },
     },
   },
   plugins: [],
