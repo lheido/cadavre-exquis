@@ -15,6 +15,10 @@ module.exports = {
         DEFAULT: "#7CC2A5",
         content: "#424242",
       },
+      alert: {
+        DEFAULT: "#D9598A",
+        content: "#f7f7f7",
+      },
       transparent: "transparent",
       currentColor: "currentColor",
     },

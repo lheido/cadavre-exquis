@@ -1,5 +1,5 @@
 import { createEffect } from "solid-js";
-import { SetStoreFunction, createStore } from "solid-js/store";
+import { SetStoreFunction, createStore, produce } from "solid-js/store";
 import { GameState } from "./types";
 import { useUser } from "./user";
 
@@ -8,7 +8,6 @@ export type GameStateReturn = [
   set: SetStoreFunction<GameState>
 ];
 
-const initialStateJSON = localStorage.getItem("game");
 let initialState = {
   initiator: "",
   players: [],
@@ -41,20 +40,27 @@ let initialState = {
   finished: false,
   result: {},
 } satisfies GameState;
+
+const initialStateJSON = localStorage.getItem("game");
+let localState: GameState | undefined;
 if (initialStateJSON) {
-  initialState = JSON.parse(initialStateJSON);
+  localState = JSON.parse(initialStateJSON);
 }
 
 export const createGame = (): GameStateReturn => {
-  const [initiator] = useUser();
-  const [state, setState] = createStore<GameState>({
-    ...initialState,
-    initiator: initiator.id,
-    players:
-      initialState.players.length > 0
-        ? initialState.players
-        : [{ ...initiator, connected: true }],
-  });
+  const [user] = useUser();
+  const takeIntoAccountLocalStorageValue = localState?.initiator === user.id;
+  const [state, setState] = createStore<GameState>(
+    takeIntoAccountLocalStorageValue && localState ? localState : initialState
+  );
+  if (state.players.length < 1) {
+    setState(
+      produce((s) => {
+        s.players.push({ ...user, connected: true });
+        s.initiator = user.id;
+      })
+    );
+  }
   createEffect(() => {
     localStorage.setItem("game", JSON.stringify(state));
   });

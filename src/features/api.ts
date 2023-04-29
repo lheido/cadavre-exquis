@@ -1,3 +1,4 @@
+import { useNavigate } from "@solidjs/router";
 import { DataConnection } from "peerjs";
 import { createEffect } from "solid-js";
 import { produce } from "solid-js/store";
@@ -118,6 +119,7 @@ export const useInitiatorAPI = (gameReturn: GameStateReturn) => {
 export const usePlayerAPI = (gameReturn: GameStateReturn) => {
   const [game, setGame] = gameReturn;
   const [user] = useUser();
+  const navigate = useNavigate();
   return {
     data: {
       [PeerDataEvents.InitiatorRequestUserData]: (co) => {
@@ -128,6 +130,10 @@ export const usePlayerAPI = (gameReturn: GameStateReturn) => {
       },
       [PeerDataEvents.PlayerReceiveGameState]: (_, payload: GameState) => {
         setGame(payload);
+      },
+      [PeerDataEvents.InitiatorCloseRoom]: () => {
+        localStorage.removeItem("game");
+        navigate("/");
       },
     },
     send: <T>(event: PeerDataEvents, payload: T, co: DataConnection) => {

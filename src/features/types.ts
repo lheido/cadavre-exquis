@@ -6,6 +6,7 @@ export enum PeerDataEvents {
   InitiatorReceivePlayerUpdate = "initiator:receive-player-update",
   PlayerSendUserData = "player:send-user-data",
   PlayerReceiveGameState = "player:receive-game-state",
+  InitiatorCloseRoom = "initiator:close-room",
 }
 
 export interface PeerAPI {

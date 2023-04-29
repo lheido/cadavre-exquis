@@ -43,3 +43,7 @@ input[type="text"] {
 [contenteditable] {
   font-size: 100% !important;
 }
+
+button {
+  @apply select-none;
+}
