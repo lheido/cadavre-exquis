@@ -25,6 +25,11 @@ export interface StepDescription {
   id: string;
   description: string;
   placeholder: string;
+  help: {
+    title: string;
+    content: string;
+    exemples: string[];
+  };
 }
 
 export interface Step {

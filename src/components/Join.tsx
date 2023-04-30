@@ -52,7 +52,6 @@ const Join: Component<JoinProps> = (props: JoinProps) => {
             type="text"
             id="join-room-by-id"
             name="room"
-            value="55b95a34-2adc-4b2b-80e1-31bd11713ae8"
             class="w-full text-neutral-content placeholder:text-neutral-content"
             placeholder="Tu connais l'id ?"
           />

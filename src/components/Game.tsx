@@ -9,6 +9,7 @@ import {
   onCleanup,
   onMount,
 } from "solid-js";
+import { Portal } from "solid-js/web";
 import { GameStateReturn } from "../features/game";
 import { PlayerPeerState } from "../features/peer";
 import { GameStates, PeerAPI } from "../features/types";
@@ -91,6 +92,8 @@ const Game: Component<GameProps> = (props: GameProps) => {
     () => (game.result && game?.result[user.id]) ?? []
   );
 
+  const [showDialog, displayDialog] = createSignal(false);
+
   return (
     <Switch>
       <Match when={!finished()}>
@@ -106,9 +109,47 @@ const Game: Component<GameProps> = (props: GameProps) => {
               {step().description}
             </h1>
             <div class="absolute top-6 right-0 px-6 w-full flex justify-between items-center gap-6">
-              <button class="p-2 rounded-full">
+              <button
+                class="p-2 rounded-full"
+                onClick={() => {
+                  displayDialog(true);
+                }}
+              >
                 <Icon icon="lamp" class="w-7 h-7" />
               </button>
+              <Portal mount={document.body}>
+                <Show when={showDialog()}>
+                  <dialog
+                    class="bg-neutral text-neutral-content w-[90%] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg z-50"
+                    open
+                  >
+                    <section class="p-4">
+                      <header class="flex justify-between">
+                        <h1 class="text-xl">{step().help.title}</h1>
+                        <button
+                          onClick={() => {
+                            displayDialog(false);
+                          }}
+                        >
+                          <span class="sr-only">Fermer</span>
+                          <Icon icon="close" />
+                        </button>
+                      </header>
+                      <div class="mt-16 flex flex-col gap-8">
+                        <p>{step().help.content}</p>
+                        <div>
+                          <p>Exemples :</p>
+                          <ul class="list-disc pl-8">
+                            <For each={step().help.exemples}>
+                              {(example) => <li>{example}</li>}
+                            </For>
+                          </ul>
+                        </div>
+                      </div>
+                    </section>
+                  </dialog>
+                </Show>
+              </Portal>
               <div class="flex flex-col gap-2">
                 <div class="flex items-center gap-2">
                   <Icon icon="skull" class="w-5 h-5" />
