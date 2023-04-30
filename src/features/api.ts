@@ -3,7 +3,7 @@ import { DataConnection } from "peerjs";
 import { createEffect } from "solid-js";
 import { produce } from "solid-js/store";
 import { GameStateReturn } from "./game";
-import { GameState, PeerAPI, PeerDataEvents, Step } from "./types";
+import { GameState, GameStates, PeerAPI, PeerDataEvents, Step } from "./types";
 import { User, useUser } from "./user";
 import { buildFinalResult, removePeerIdPrefix } from "./utils";
 
@@ -11,7 +11,7 @@ export const useInitiatorAPI = (gameReturn: GameStateReturn) => {
   const [game, setGame] = gameReturn;
 
   createEffect(() => {
-    if (game.started && !game.finished) {
+    if (game.state === GameStates.Playing) {
       const playersSteps = Object.values(game.data);
       if (game.players.length === playersSteps.length) {
         const stepCompleted = playersSteps.every(
@@ -27,7 +27,7 @@ export const useInitiatorAPI = (gameReturn: GameStateReturn) => {
         ) {
           setGame(
             produce((s) => {
-              s.finished = true;
+              s.state = GameStates.Finished;
               s.result = buildFinalResult(
                 JSON.parse(JSON.stringify(game.data)),
                 JSON.parse(JSON.stringify(game.steps))
@@ -44,7 +44,10 @@ export const useInitiatorAPI = (gameReturn: GameStateReturn) => {
       co.send({ type: PeerDataEvents.InitiatorRequestUserData });
     },
     onClose: (co: DataConnection) => {
-      if (!game.started) {
+      if (
+        [GameStates.Config, GameStates.Finished].includes(game.state) ||
+        game.stopped
+      ) {
         // Remove the player from the game
         setGame(
           produce((s) => {

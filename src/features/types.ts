@@ -38,13 +38,19 @@ export interface Player extends User {
   connected: boolean;
 }
 
+export enum GameStates {
+  Config = "config",
+  Playing = "playing",
+  Finished = "finished",
+}
+
 export interface GameState {
   initiator: string;
   players: Player[];
   data: Record<string, Step[]>;
   steps: StepDescription[];
   result: Record<string, Step[]>;
-  started: boolean;
-  finished: boolean;
+  state: GameStates;
+  stopped: boolean;
   step: number;
 }

@@ -1,6 +1,6 @@
 import { createEffect } from "solid-js";
 import { SetStoreFunction, createStore, produce } from "solid-js/store";
-import { GameState } from "./types";
+import { GameState, GameStates } from "./types";
 import { useUser } from "./user";
 
 export type GameStateReturn = [
@@ -8,7 +8,7 @@ export type GameStateReturn = [
   set: SetStoreFunction<GameState>
 ];
 
-let initialState = {
+export const initialState = {
   initiator: "",
   players: [],
   data: {},
@@ -36,8 +36,8 @@ let initialState = {
       placeholder: `P'tite précision sur le "quand" ?`,
     },
   ],
-  started: false,
-  finished: false,
+  state: GameStates.Config,
+  stopped: false,
   result: {},
 } satisfies GameState;
 

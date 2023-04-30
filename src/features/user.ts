@@ -22,7 +22,7 @@ const animals = [
   "Ours",
   "Renard",
 ];
-const colors = [
+const namedColors = [
   "Écarlate",
   "Turquoise",
   "Corail",
@@ -85,9 +85,20 @@ const others = [
   "Autrichienne",
 ];
 
+export const colors = [
+  "#DC3131",
+  "#DC7A43",
+  "#EDF050",
+  "#128D34",
+  "#7ACEE9",
+  "#4B68FF",
+  "#A961E2",
+  "#E35BDE",
+];
+
 export const getRandomUserName = () => {
   const other = others[Math.floor(Math.random() * others.length)];
-  const color = colors[Math.floor(Math.random() * colors.length)];
+  const color = namedColors[Math.floor(Math.random() * namedColors.length)];
   const animal = animals[Math.floor(Math.random() * animals.length)];
   return `${animal}-${color}-${other}`.toLowerCase().replace(/ /g, "-");
 };
@@ -108,7 +119,7 @@ if (jsonData) {
     id: crypto.randomUUID(),
     name: getRandomUserName(),
     color: "#000000",
-    avatar: "",
+    avatar: colors[0],
   };
   localStorage.setItem("user", JSON.stringify(userData));
 }

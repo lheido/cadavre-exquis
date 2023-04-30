@@ -26,14 +26,12 @@ body {
 
 input[type="text"] {
   @apply bg-transparent p-2;
-  @apply placeholder:text-neutral-content placeholder:text-opacity-70;
+  @apply placeholder:text-opacity-70;
   @apply outline-none;
 }
 
 .form-field {
   @apply relative;
-  @apply after:bg-neutral after:h-px after:absolute after:bottom-0 after:left-0 after:w-full after:bg-opacity-40 after:transition-all;
-  @apply focus-within:after:bg-opacity-100;
 }
 
 [contenteditable]:empty::before {

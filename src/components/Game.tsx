@@ -11,11 +11,9 @@ import {
 } from "solid-js";
 import { GameStateReturn } from "../features/game";
 import { PlayerPeerState } from "../features/peer";
-import { PeerAPI } from "../features/types";
+import { GameStates, PeerAPI } from "../features/types";
 import { useUser } from "../features/user";
 import Icon from "./Icon";
-import Aside from "./layout/Aside";
-import Main from "./layout/Main";
 
 interface GameProps {
   game: GameStateReturn;
@@ -29,10 +27,11 @@ const Game: Component<GameProps> = (props: GameProps) => {
   const [value, setValue] = createSignal("");
   const [scrollY, setScrollY] = createSignal(0);
 
-  const isGameFinished = createMemo(() => game.finished);
+  const playing = createMemo(() => game.state === GameStates.Playing);
+  const finished = createMemo(() => game.state === GameStates.Finished);
   const step = createMemo(() => game.steps[game.step]);
   const waitingForOthers = createMemo(
-    () => !!game.data[user.id].find((s) => s.id === step().id)
+    () => playing() && !!game.data[user.id].find((s) => s.id === step().id)
   );
 
   const playersPlayed = createMemo(() => {
@@ -94,139 +93,136 @@ const Game: Component<GameProps> = (props: GameProps) => {
 
   return (
     <Switch>
-      <Match when={!isGameFinished()}>
-        <Main class="p-0">
-          <section class="relative h-full flex flex-col justify-between overflow-x-hidden">
-            <header class="relative">
-              <h1
-                class="mt-20 py-4 px-6 text-center font-display transition-all duration-200 supports-ios:text-3xl"
-                classList={{
-                  "text-5xl": !keyboardVisible(),
-                  "text-3xl": keyboardVisible(),
-                }}
-              >
-                {step().description}
-              </h1>
-              <div class="absolute top-6 right-0 px-6 w-full flex justify-between items-center gap-6">
-                <button class="p-2 rounded-full">
-                  <Icon icon="lamp" class="w-7 h-7" />
-                </button>
-                <div class="flex flex-col gap-2">
-                  <div class="flex items-center gap-2">
-                    <Icon icon="skull" class="w-5 h-5" />
-                    <p>{`${playersPlayed()}/${game.players.length}`}</p>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <Icon icon="cupcake" class="w-5 h-5" />
-                    <p>{`${game.step + 1}/${game.steps.length}`}</p>
-                  </div>
+      <Match when={!finished()}>
+        <section class="relative h-full flex flex-col justify-between overflow-x-hidden">
+          <header class="relative">
+            <h1
+              class="mt-20 py-4 px-6 text-center font-display transition-all duration-200 supports-ios:text-3xl"
+              classList={{
+                "text-5xl": !keyboardVisible(),
+                "text-3xl": keyboardVisible(),
+              }}
+            >
+              {step().description}
+            </h1>
+            <div class="absolute top-6 right-0 px-6 w-full flex justify-between items-center gap-6">
+              <button class="p-2 rounded-full">
+                <Icon icon="lamp" class="w-7 h-7" />
+              </button>
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                  <Icon icon="skull" class="w-5 h-5" />
+                  <p>{`${playersPlayed()}/${game.players.length}`}</p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <Icon icon="cupcake" class="w-5 h-5" />
+                  <p>{`${game.step + 1}/${game.steps.length}`}</p>
                 </div>
               </div>
-            </header>
+            </div>
+          </header>
+          <div
+            class="self-center relative transition-all supports-ios:opacity-5"
+            classList={{
+              "grayscale-0 h-[40vh] w-[40vh]": waitingForOthers(),
+              "grayscale h-0 w-full translate-x-10 opacity-40":
+                !waitingForOthers(),
+              "opacity-5": keyboardVisible(),
+            }}
+          >
             <div
-              class="self-center relative transition-all supports-ios:opacity-5"
+              class="absolute top-0 left-0 xs:-left-3 w-[40svh] h-auto aspect-square transition-all"
               classList={{
-                "grayscale-0 h-[40vh] w-[40vh]": waitingForOthers(),
-                "grayscale h-0 w-full translate-x-10 opacity-40":
+                "-translate-x-1/2 -translate-y-3/4 rotate-[20deg] scale-110":
                   !waitingForOthers(),
-                "opacity-5": keyboardVisible(),
+                "-translate-x-0 -translate-y-0 rotate-0 scale-100":
+                  waitingForOthers(),
               }}
             >
-              <div
-                class="absolute top-0 left-0 xs:-left-3 w-[40svh] h-auto aspect-square transition-all"
+              <svg class="absolute w-full h-full top-0 left-0">
+                <use href="#symbol-logo-cup" />
+              </svg>
+              <svg class="absolute w-full h-full top-0 left-0">
+                <use href="#symbol-logo-cake" />
+              </svg>
+              <svg class="absolute w-full h-full top-0 left-0">
+                <use href="#symbol-logo-cherry" />
+              </svg>
+              <svg
+                class="absolute w-full h-full top-0 left-0"
+                style={{ "transform-origin": "62% 52%" }}
                 classList={{
-                  "-translate-x-1/2 -translate-y-3/4 rotate-[20deg] scale-110":
-                    !waitingForOthers(),
-                  "-translate-x-0 -translate-y-0 rotate-0 scale-100":
-                    waitingForOthers(),
+                  "animate-bounce-slow": waitingForOthers(),
                 }}
               >
-                <svg class="absolute w-full h-full top-0 left-0">
-                  <use href="#symbol-logo-cup" />
-                </svg>
-                <svg class="absolute w-full h-full top-0 left-0">
-                  <use href="#symbol-logo-cake" />
-                </svg>
-                <svg class="absolute w-full h-full top-0 left-0">
-                  <use href="#symbol-logo-cherry" />
-                </svg>
-                <svg
-                  class="absolute w-full h-full top-0 left-0"
-                  style={{ "transform-origin": "62% 52%" }}
-                  classList={{
-                    "animate-bounce-slow": waitingForOthers(),
-                  }}
-                >
-                  <use href="#symbol-logo-skull" />
-                </svg>
-              </div>
+                <use href="#symbol-logo-skull" />
+              </svg>
             </div>
+          </div>
+          <div
+            class="relative supports-ios:h-full"
+            classList={{
+              "h-full": keyboardVisible(),
+            }}
+          >
             <div
-              class="relative supports-ios:h-full"
+              class="flex items-end gap-4 py-4 pr-2 w-full transition-opacity duration-500 !supports-ios:opacity-100"
               classList={{
-                "h-full": keyboardVisible(),
+                "opacity-0": opacity0(),
+                "pl-4": !waitingForOthers(),
+                "pl-2": waitingForOthers(),
               }}
             >
-              <div
-                class="flex items-end gap-4 py-4 pr-2 w-full transition-opacity duration-500 !supports-ios:opacity-100"
-                classList={{
-                  "opacity-0": opacity0(),
-                  "pl-4": !waitingForOthers(),
-                  "pl-2": waitingForOthers(),
-                }}
+              <Show
+                when={!waitingForOthers()}
+                fallback={
+                  <p class="py-6 text-center w-full">
+                    En attente des autres joueurs
+                  </p>
+                }
               >
-                <Show
-                  when={!waitingForOthers()}
-                  fallback={
-                    <p class="py-6 text-center w-full">
-                      En attente des autres joueurs
-                    </p>
-                  }
+                <div class="flex-1 relative after:absolute after:bottom-0 after:right-0 after:bg-neutral after:h-px after:w-[93%] after:opacity-50 focus-within:after:opacity-100 focus-within:after:h-0.5 after:transition-all">
+                  <div
+                    id="step-input"
+                    class="w-full h-auto overflow-y-auto min-h-[15vh] max-h-[32svh] bg-neutral bg-opacity-20 p-2 rounded-t-lg rounded-bl-2xl placeholder:text-primary-content placeholder:text-opacity-70 outline-none before:opacity-70"
+                    contenteditable
+                    // @ts-ignore
+                    placeholder={step().placeholder}
+                    onInput={(e) => setValue(e.currentTarget.innerText)}
+                  />
+                </div>
+                <button
+                  class="transition-all disabled:opacity-50 active:bg-neutral active:text-neutral-content bg-accent rounded-full p-4 flex justify-center items-center"
+                  disabled={value() === "" || opacity0()}
+                  onClick={addStepHandler}
                 >
-                  <div class="flex-1 relative after:absolute after:bottom-0 after:right-0 after:bg-neutral after:h-px after:w-[93%] after:opacity-50 focus-within:after:opacity-100 focus-within:after:h-0.5 after:transition-all">
-                    <div
-                      id="step-input"
-                      class="w-full h-auto overflow-y-auto min-h-[15vh] max-h-[32svh] bg-neutral bg-opacity-20 p-2 rounded-t-lg rounded-bl-2xl placeholder:text-primary-content placeholder:text-opacity-70 outline-none before:opacity-70"
-                      contenteditable
-                      // @ts-ignore
-                      placeholder={step().placeholder}
-                      onInput={(e) => setValue(e.currentTarget.innerText)}
-                    />
-                  </div>
-                  <button
-                    class="transition-all disabled:opacity-50 active:bg-neutral active:text-neutral-content bg-accent rounded-full p-4 flex justify-center items-center"
-                    disabled={value() === "" || opacity0()}
-                    onClick={addStepHandler}
-                  >
-                    <span class="sr-only">Envoyer</span>
-                    <Icon icon="send" />
-                  </button>
-                </Show>
-              </div>
+                  <span class="sr-only">Envoyer</span>
+                  <Icon icon="send" />
+                </button>
+              </Show>
             </div>
-          </section>
-        </Main>
-        <Aside>
-          <p>Game settings and QRCode</p>
-        </Aside>
+          </div>
+        </section>
       </Match>
-      <Match when={isGameFinished()}>
-        <Main class="p-0">
-          <section class="relative flex flex-col gap-8 overflow-x-hidden">
-            <h1 class="text-center font-display text-5xl pt-16">
-              C'est fini !
-            </h1>
-            <p class="text-center px-6">Voici un des résultats</p>
-            <ul class="flex flex-col gap-2 px-6">
-              <For each={finalResult()}>
-                {(result) => (
-                  <li class="p-4 bg-neutral rounded-lg">{result.data}</li>
-                )}
-              </For>
-            </ul>
-          </section>
-        </Main>
-        <Aside></Aside>
+      <Match when={finished()}>
+        <section class="relative flex flex-col gap-8 overflow-x-hidden">
+          <h1 class="text-center font-display text-5xl pt-16">C'est fini !</h1>
+          <p class="text-center px-6">Voici un des résultats</p>
+          <ul class="flex flex-col gap-2 px-6">
+            <For each={finalResult()}>
+              {(result) => (
+                <li class="p-4 bg-neutral rounded-lg overflow-hidden relative">
+                  {result.data}
+                  <Icon
+                    icon="skull"
+                    class="w-12 h-12 absolute -top-3 -right-3 -rotate-12 opacity-50"
+                    style={{ color: result.color }}
+                  />
+                </li>
+              )}
+            </For>
+          </ul>
+        </section>
       </Match>
     </Switch>
   );

@@ -89,7 +89,7 @@ export const usePeerPlayer = (
         } else {
           clearInterval(interval);
         }
-      }, 1000);
+      }, 1000) as unknown as number;
     } else if (!prev && state.connected && state.atempts > 0) {
       setState("atempts", 0);
       console.log("reconnection successful");
