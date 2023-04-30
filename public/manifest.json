@@ -1,0 +1,53 @@
+{
+  "name": "Cadavre Exquis",
+  "short_name": "Cadavre Exquis",
+  "start_url": "/",
+  "display": "standalone",
+  "description": "Le jeux du Cadavre Exquis",
+  "lang": "fr",
+  "dir": "auto",
+  "theme_color": "#B58FC2",
+  "background_color": "#666167",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/manifest-icon-192.maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/manifest-icon-192.maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/manifest-icon-512.maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/manifest-icon-512.maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://www.pwabuilder.com/assets/screenshots/screen1.png",
+      "sizes": "2880x1800",
+      "type": "image/png",
+      "description": "A screenshot of the home page"
+    }
+  ],
+  "prefer_related_applications": false,
+  "protocol_handlers": [
+    {
+      "protocol": "web",
+      "url": "/room/%s"
+    }
+  ]
+}
