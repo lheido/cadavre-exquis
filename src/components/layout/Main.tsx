@@ -8,7 +8,7 @@ const Main: Component<MainProps> = (props: MainProps) => {
   return (
     <main
       class={twMerge(
-        "bg-primary text-primary-content relative pt-32 rounded-b-3xl px-4 pb-4 h-[90svh] shadow-xl overflow-hidden shadow-neutral z-10",
+        "bg-primary text-primary-content relative pt-32 rounded-b-3xl px-4 pb-4 min-h-[90svh] shadow-xl overflow-hidden shadow-neutral z-10",
         classes.class
       )}
       classList={classes.classList}

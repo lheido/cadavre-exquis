@@ -122,7 +122,7 @@ const Initiator: Component = () => {
         </Show>
         <Show when={finished()}>
           <button
-            class="px-8 py-4 font-display text-5xl flex justify-center items-center rounded-full bg-accent text-accent-content scale-100 active:scale-105 disabled:opacity-50 transition-all"
+            class="px-8 py-4 font-display text-4xl flex justify-center items-center rounded-full bg-accent text-accent-content scale-100 active:scale-105 disabled:opacity-50 transition-all"
             disabled={game.players.length < 2}
             onClick={() => {
               setGame(
